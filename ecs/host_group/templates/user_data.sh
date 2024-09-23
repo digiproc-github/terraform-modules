@@ -23,6 +23,13 @@ ECS_INSTANCE_ATTRIBUTES=${instance_attributes}
 ${ecs_agent_config}
 EOF
 
+# Make sure ECS agent is restarted when docker restarts
+cat >/etc/systemd/system/ecs.service.d/override.conf <<EOF
+[Unit]
+Requires=docker.service
+EOF
+systemctl daemon-reload
+
 # Update ECS agent
 yum update -y ecs-init
 docker pull amazon/amazon-ecs-agent:latest
@@ -55,7 +62,7 @@ update_cmd = security
 update_messages = yes
 download_updates = yes
 apply_updates = yes
-random_sleep = 0
+random_sleep = 60
 
 [base]
 exclude = kernel*
@@ -73,13 +80,9 @@ EOF
 
 systemctl enable yum-cron
 
-# Enable docker daemon live restore, so we can update docker without
-# restarting containers
-# https://docs.docker.com/config/containers/live-restore/
+# https://docs.docker.com/reference/cli/dockerd/#daemon-configuration-file
 cat >/etc/docker/daemon.json <<EOF
-{
-  "live-restore": true
-}
+${jsonencode(docker_config)}
 EOF
 
 # Setup memory and disk usage monitoring

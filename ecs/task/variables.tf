@@ -185,3 +185,9 @@ variable "placement_constraint_expressions" {
   type        = list(string)
   default     = []
 }
+
+variable "other_container_definitions" {
+  description = "Other container definitions to include in the task definition"
+  type        = list(string)
+  default     = []
+}

@@ -49,7 +49,12 @@ resource "aws_ecs_task_definition" "task" {
   count = var.create ? 1 : 0
 
   family                = local.family
-  container_definitions = jsonencode([module.container.definition])
+  container_definitions = jsonencode(
+    concat(
+      [module.container.definition],
+      [for def in var.other_container_definitions : jsondecode(def)]
+    )
+  )
   task_role_arn         = var.role_arn
   execution_role_arn    = var.execution_role_arn
 

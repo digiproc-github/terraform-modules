@@ -159,3 +159,21 @@ variable "deployment_rollback" {
   type        = bool
   default     = true
 }
+
+variable "placement_constraints" {
+  description = "A list of placement constraints for the ECS service"
+  type = list(object({
+    type       = string
+    expression = string
+  }))
+  default = []
+}
+
+variable "ordered_placement_strategy" {
+  description = "A list of placement strategies for the ECS service"
+  type = list(object({
+    type  = string
+    field = string
+  }))
+  default = []
+}

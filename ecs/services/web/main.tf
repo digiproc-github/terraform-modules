@@ -37,6 +37,24 @@ resource "aws_ecs_service" "service" {
 
   wait_for_steady_state = var.wait_for_steady_state
 
+  # Add dynamic blocks for placement constraints
+  dynamic "placement_constraints" {
+    for_each = var.placement_constraints
+    content {
+      type       = placement_constraints.value.type
+      expression = placement_constraints.value.expression
+    }
+  }
+
+  # Add dynamic blocks for placement strategies
+  dynamic "ordered_placement_strategy" {
+    for_each = var.ordered_placement_strategy
+    content {
+      type  = ordered_placement_strategy.value.type
+      field = ordered_placement_strategy.value.field
+    }
+  }
+
   load_balancer {
     target_group_arn = aws_lb_target_group.service[0].arn
     container_name   = local.container

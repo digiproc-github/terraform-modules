@@ -37,3 +37,8 @@ output "management_lambda" {
   description = "Management lambda function outputs"
   value       = module.management_lambda
 }
+
+output "db_instance_id" {
+  description = "The RDS instance ID"
+  value       = var.create ? aws_db_instance.db[0].id : ""
+}

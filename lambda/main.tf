@@ -49,7 +49,7 @@ resource "aws_iam_role_policy_attachment" "basic" {
 }
 
 resource "aws_iam_role_policy_attachment" "vpc" {
-  count = var.create ? 1 : 0
+  count = var.create && local.in_vpc ? 1 : 0
 
   role       = local.role_name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"

@@ -71,3 +71,15 @@ variable "instance_count" {
   default     = 1
 }
 
+variable "snapshot_name" {
+  description = "Name of a snapshot to restore data from when creating the cluster. Set to null after initial creation."
+  type        = string
+  default     = null
+}
+
+variable "final_snapshot_identifier" {
+  description = "Name for the final snapshot when the cluster is deleted. Set to null to skip final snapshot."
+  type        = string
+  default     = null
+}
+

@@ -56,5 +56,8 @@ resource "aws_elasticache_cluster" "cache" {
   security_group_ids   = [aws_security_group.cache[0].id]
 
   tags = local.tags
+
+  snapshot_name              = var.snapshot_name
+  final_snapshot_identifier  = var.final_snapshot_identifier
 }
 

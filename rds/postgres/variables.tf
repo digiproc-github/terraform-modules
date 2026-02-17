@@ -118,3 +118,9 @@ variable "encrypt" {
   type        = bool
   default     = false
 }
+
+variable "performance_insights_enabled" {
+  description = "Enable Performance Insights for the RDS instance"
+  type        = bool
+  default     = false
+}

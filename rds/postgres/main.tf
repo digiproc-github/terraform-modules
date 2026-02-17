@@ -75,6 +75,8 @@ resource "aws_db_instance" "db" {
   copy_tags_to_snapshot      = true
   auto_minor_version_upgrade = false
 
+  performance_insights_enabled = var.performance_insights_enabled
+
   port     = var.port
   name     = local.db
   username = var.username

@@ -78,6 +78,12 @@ resource "aws_launch_template" "hosts" {
   vpc_security_group_ids = [var.security_group_id]
   user_data              = base64encode(local.user_data)
 
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_put_response_hop_limit = 2
+    http_tokens                 = "optional"
+  }
+
   iam_instance_profile {
     name = var.instance_profile
   }

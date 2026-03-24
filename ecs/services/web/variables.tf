@@ -56,8 +56,9 @@ variable "container_port" {
 }
 
 variable "role_arn" {
-  description = "ARN of the IAM role that allows Amazon ECS to make calls to your load balancer on your behalf."
+  description = "ARN of the IAM role that allows Amazon ECS to make calls to your load balancer on your behalf. Must be null when using awsvpc network mode (Fargate)."
   type        = string
+  default     = null
 }
 
 variable "vpc_id" {
@@ -176,4 +177,30 @@ variable "ordered_placement_strategy" {
     field = string
   }))
   default = []
+}
+
+variable "network_configuration" {
+  description = "awsvpc network configuration for the ECS service. Required when launch_type is FARGATE."
+  type = object({
+    subnets          = list(string)
+    security_groups  = list(string)
+    assign_public_ip = optional(bool, false)
+  })
+  default = null
+}
+
+variable "capacity_provider_strategy" {
+  description = "Capacity provider strategy for the ECS service. Mutually exclusive with launch_type when non-empty."
+  type = list(object({
+    capacity_provider = string
+    weight            = number
+    base              = optional(number, null)
+  }))
+  default = []
+}
+
+variable "target_type" {
+  description = "Load balancer target group target type. Use 'ip' for awsvpc/Fargate tasks, 'instance' for EC2 bridge/host."
+  type        = string
+  default     = "instance"
 }

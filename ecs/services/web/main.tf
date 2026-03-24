@@ -29,11 +29,11 @@ resource "aws_ecs_service" "service" {
   cluster                            = var.cluster_arn
   task_definition                    = var.task_definition_arn
   desired_count                      = var.desired_count
-  launch_type                        = var.launch_type
+  launch_type                        = length(var.capacity_provider_strategy) > 0 ? null : var.launch_type
   scheduling_strategy                = "REPLICA"
   deployment_maximum_percent         = var.deployment_max_percent
   deployment_minimum_healthy_percent = var.deployment_min_percent
-  iam_role                           = var.role_arn
+  iam_role                           = var.network_configuration != null ? null : var.role_arn
 
   wait_for_steady_state = var.wait_for_steady_state
 
@@ -52,6 +52,24 @@ resource "aws_ecs_service" "service" {
     content {
       type  = ordered_placement_strategy.value.type
       field = ordered_placement_strategy.value.field
+    }
+  }
+
+  dynamic "capacity_provider_strategy" {
+    for_each = var.capacity_provider_strategy
+    content {
+      capacity_provider = capacity_provider_strategy.value.capacity_provider
+      weight            = capacity_provider_strategy.value.weight
+      base              = capacity_provider_strategy.value.base
+    }
+  }
+
+  dynamic "network_configuration" {
+    for_each = var.network_configuration != null ? [var.network_configuration] : []
+    content {
+      subnets          = network_configuration.value.subnets
+      security_groups  = network_configuration.value.security_groups
+      assign_public_ip = network_configuration.value.assign_public_ip
     }
   }
 
@@ -83,6 +101,7 @@ resource "aws_lb_target_group" "service" {
   name                 = local.target_group_name
   protocol             = "HTTP"
   port                 = var.container_port
+  target_type          = var.target_type
   vpc_id               = var.vpc_id
   deregistration_delay = var.deregistration_delay
   slow_start           = var.slow_start

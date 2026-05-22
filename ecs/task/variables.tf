@@ -191,3 +191,15 @@ variable "other_container_definitions" {
   type        = list(string)
   default     = []
 }
+
+variable "runtime_platform" {
+  description = <<-EOT
+    Runtime platform for the task. Required when running Fargate tasks on a non-default architecture (e.g. ARM64/Graviton).
+    Leave null to use the AWS default (LINUX / X86_64). Ignored for EC2 launch type, where architecture is determined by the host instance.
+  EOT
+  type = object({
+    cpu_architecture        = string
+    operating_system_family = string
+  })
+  default = null
+}

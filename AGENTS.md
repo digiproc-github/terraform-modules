@@ -54,3 +54,4 @@ Each top-level directory is a self-contained module:
 - Branch: `feature/deli-{ticket}-{description}` (matches the platform convention)
 - Commit messages: `DELI-{ticket}: …` or conventional (`feat:`, `fix:`, `chore:`)
 - CI: `terraform fmt -check -diff` + `terraform validate` on every module
+- **PR review**: the DigiProc Review bot reviews every PR into `master` (`.github/workflows/pr-review.yml`) and never approves one here; a human always does. Path rules live in `.github/review-rules.yml`.

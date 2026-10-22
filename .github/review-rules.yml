@@ -1,0 +1,10 @@
+version: 1
+
+never_auto_approve: true
+
+areas:
+  - key: infra
+    paths:
+      - '**'
+
+default_area: infra

@@ -1,0 +1,28 @@
+name: PR review
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize, edited, labeled]
+  issue_comment:
+    types: [created]
+  pull_request_review:
+    types: [dismissed]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number
+        required: true
+        type: string
+      head_sha:
+        description: Head commit seen by the debounce
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  review:
+    uses: digiproc-github/digiproc-review/.github/workflows/pr-review.yml@feature/pr-review-system
+    secrets: inherit
